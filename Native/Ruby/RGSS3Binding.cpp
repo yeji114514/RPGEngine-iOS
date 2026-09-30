@@ -1,0 +1,2 @@
+#include "RGSS3Binding.hpp"
+namespace rpg::rgss3 { bool RGSS3Binding::initialize(RubyVMAdapter& v){vm_=&v;return vm_->initialize();} bool RGSS3Binding::installGraphics(){return vm_!=nullptr;} bool RGSS3Binding::installInput(){return vm_!=nullptr;} bool RGSS3Binding::installAudio(){return vm_!=nullptr;} bool RGSS3Binding::installBitmap(){return vm_!=nullptr;} bool RGSS3Binding::installSprite(){return vm_!=nullptr;} bool RGSS3Binding::installViewport(){return vm_!=nullptr;} bool RGSS3Binding::installWindow(){return vm_!=nullptr;} }

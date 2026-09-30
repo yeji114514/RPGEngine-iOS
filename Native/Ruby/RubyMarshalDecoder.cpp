@@ -1,0 +1,2 @@
+#include "RubyMarshalDecoder.hpp"
+namespace rpg::ruby { bool RubyMarshalDecoder::readByte(uint8_t&v){if(cursor_>=data_.size())return false;v=data_[cursor_++];return true;} bool RubyMarshalDecoder::header(){uint8_t a=0,b=0;return readByte(a)&&readByte(b)&&a==4&&b==8;} bool RubyMarshalDecoder::decode(const std::vector<uint8_t>&d){data_=d;cursor_=0;objectCount_=0;return header();} bool RubyMarshalDecoder::decodeScripts(const std::vector<uint8_t>&d){return decode(d);} }

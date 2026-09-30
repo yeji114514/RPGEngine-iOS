@@ -1,0 +1,5 @@
+#pragma once
+#define RPGENGINE_RUBY_MAJOR 1
+#define RPGENGINE_RUBY_MINOR 9
+#define RPGENGINE_RUBY_PATCH 2
+#define RPGENGINE_RUBY_TARGET "ios-arm64"
