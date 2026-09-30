@@ -1,73 +1,60 @@
-# RPGEngine-iOS v1.0.0
+# RPGEngine-iOS v0.5.1
 
-## Ruby 1.9.x arm64 Runtime + Ruby C API
+## GitHub Actions build
 
-v1.0 is the first release whose native architecture is prepared to link a
-real, statically built Ruby 1.9.x arm64 library into the iOS engine.
+This version is prepared for **GitHub Actions + macOS runner**, so a Mac is not required locally.
 
-VX Ace RGSS3 is documented as Ruby 1.9.2-p0, and its startup flow loads and
-executes `Data/Scripts.rvdata2`. citeturn0search4
+The workflow:
 
-mkxp-z uses an MRI binding layer to glue Ruby to the engine and supports RGSS
-bindings; its repository also maintains Ruby sources. citeturn0search1turn0search3
-A mobile fork demonstrates shipping multiple Ruby generations as merged object
-files with a runtime selector, which is useful for our eventual multi-runtime
-design. citeturn0search8
+1. checks out the repository
+2. selects Xcode 16.4
+3. installs XcodeGen
+4. generates `RPGEngine.xcodeproj`
+5. compiles the iOS target for iOS 16+
+6. creates an unsigned IPA artifact
+7. optionally signs and exports a personal IPA when signing secrets are configured
 
-### Architecture
+### Build without a Mac
 
-```text
-iOS App
-  |
-  +-- EngineHost
-  |     +-- Metal
-  |     +-- Audio
-  |     +-- Input
-  |
-  +-- VXAceProvider
-  |
-  +-- RGSS3Runtime
-  |     |
-  |     +-- RubyCAPI
-  |     |     |
-  |     |     +-- libruby19-ios-arm64.a
-  |     |
-  |     +-- Ruby Marshal
-  |     +-- RGSS3 Binding
-  |
-  +-- RuntimeManager
-  |
-  +-- Game Library
-```
+Create a GitHub repository and upload this project. Then:
 
-### What v1.0 actually provides
+`Actions → iOS Build → Run workflow`
 
-- arm64/iOS Ruby build recipe.
-- Static-library integration boundary.
-- Ruby C API adapter.
-- RGSS3 native runtime lifecycle.
-- Ruby smoke-test source.
-- Explicit iOS 16 deployment target in the build recipe.
-- No runtime executable code is downloaded.
+The artifact will be:
 
-### What is NOT falsely claimed
+`RPGEngine-iOS-v0.5.1-unsigned`
 
-The repository does **not** include a prebuilt `libruby19-ios-arm64.a`.
-A genuine Ruby 1.9.2 iOS build requires compiling the pinned source with the
-Apple SDK. The build script is therefore included, but a successful device
-build still has to be performed and tested.
+### Important
 
-This is important because Ruby 1.9.x is obsolete and current build tooling
-has limitations around very old Ruby versions. citeturn0search13
+An unsigned IPA is useful for build verification, but it is not directly installable on a normal iPhone.
 
-### Next
+For a personally signed IPA, configure these repository Actions secrets:
 
-After the archive successfully links:
+- `IOS_CERTIFICATE_BASE64`
+- `IOS_CERTIFICATE_PASSWORD`
+- `IOS_KEYCHAIN_PASSWORD`
+- `IOS_PROVISION_PROFILE_BASE64`
+- `IOS_TEAM_ID`
+- `IOS_CODE_SIGN_IDENTITY`
+- `IOS_PROVISIONING_PROFILE_NAME`
+- `IOS_EXPORT_OPTIONS_PLIST_BASE64`
 
-1. wire `rb_eval_string_protect` / protected calls;
-2. implement Ruby Marshal object decoding;
-3. load `Scripts.rvdata2`;
-4. expose RGSS3 classes;
-5. execute `Main Process`;
-6. decode `Map001.rvdata2`;
-7. render the first VX Ace map through Metal.
+Use a provisioning profile and certificate that belong to your own Apple development/signing setup. Do not commit `.p12`, `.mobileprovision`, or private keys.
+
+## iOS deployment target
+
+`iOS 16.0`
+
+## v0.5.1 scope
+
+This release is a **buildable iOS host / Runtime Manager shell**. It does not claim that Ruby 1.9.x + RGSS3 is already fully executing. The actual arm64 Ruby/RGSS3 runtime remains the next native integration milestone.
+
+## Runtime downloads
+
+The runtime package manager verifies SHA-256 before accepting a package. Production runtime packages should additionally use a signed manifest and an audited archive extractor.
+
+The app does not dynamically load arbitrary downloaded dylibs/frameworks. Runtime downloads are therefore treated as package data/resources and passed through the native runtime interfaces that are already part of the app.
+
+## Project generation
+
+The repository intentionally uses `project.yml` + XcodeGen rather than committing a large hand-edited `.pbxproj`. GitHub Actions generates the Xcode project on the macOS runner.

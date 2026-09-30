@@ -1,0 +1,37 @@
+name: RPGEngine
+options:
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+    CLANG_CXX_LANGUAGE_STANDARD: c++17
+    CLANG_ENABLE_MODULES: YES
+    ENABLE_BITCODE: NO
+targets:
+  RPGEngine:
+    type: application
+    platform: iOS
+    sources:
+      - path: RPGEngine
+      - path: Native
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.rpgengine.ios
+        INFOPLIST_FILE: RPGEngine/Info.plist
+        PRODUCT_NAME: RPGEngine
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SUPPORTS_MACCATALYST: NO
+        SWIFT_OBJC_BRIDGING_HEADER: RPGEngine/RPGEngine-Bridging-Header.h
+    info:
+      path: RPGEngine/Info.plist
+      properties:
+        CFBundleDisplayName: RPGEngine
+        UILaunchScreen: {}
+        UIRequiresFullScreen: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
